@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Age-Based Access Filter</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      margin-top: 20px;
+    }
+
+    .site {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .allowed {
+      color: green;
+    }
+
+    .denied {
+      color: red;
+    }
+
+    a.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Child Safety Content Filter</h2>
+
+    <input type="number" id="age" placeholder="Enter your age" min="1">
+    <select id="gender">
+      <option value="">Select gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+    </select>
+
+    <button onclick="checkAccess()">Check Allowed Apps</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const websites = [
+      { name: "Instagram", url: "https://www.instagram.com", minAge: 13 },
+      { name: "YouTube", url: "https://www.youtube.com", minAge: 10 },
+      { name: "TikTok", url: "https://www.tiktok.com", minAge: 13 },
+      { name: "Omegle", url: "https://www.omegle.com", minAge: 18 },
+      { name: "Barbie Games", url: "https://barbie.com", minAge: 5 },
+      { name: "Khan Academy Kids", url: "https://learn.khanacademy.org/khan-academy-kids/", minAge: 5 },
+    ];
+
+    function checkAccess() {
+      const age = parseInt(document.getElementById("age").value);
+      const gender = document.getElementById("gender").value;
+      const result = document.getElementById("result");
+
+      result.innerHTML = "";
+
+      if (!age || !gender) {
+        result.innerHTML = "<p style='color:red;'>Please enter age and select gender.</p>";
+        return;
+      }
+
+      const heading = document.createElement("h3");
+      heading.textContent = `Access Result for Age: ${age}`;
+      result.appendChild(heading);
+
+      websites.forEach(site => {
+        const box = document.createElement("div");
+        box.className = "site";
+
+        const name = document.createElement("div");
+        name.textContent = site.name;
+
+        const link = document.createElement("a");
+        link.href = site.url;
+        link.target = "_blank";
+
+        if (age >= site.minAge) {
+          link.textContent = "✅ Open";
+          link.className = "allowed";
+        } else {
+          link.textContent = "❌ Not Allowed";
+          link.className = "denied disabled";
+        }
+
+        box.appendChild(name);
+        box.appendChild(link);
+        result.appendChild(box);
+      });
+    }
+  </script>
+</body>
+</html>
